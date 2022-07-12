@@ -1,3 +1,5 @@
+const searchInput = document.querySelector(".search-input");
+const searchBtn = document.querySelector(".search-btn");
 const map = L.map("map").setView([28.6138954, 77.2090057], 4);
 
 const Stamen_Toner = L.tileLayer(
@@ -15,3 +17,31 @@ const Stamen_Toner = L.tileLayer(
 Stamen_Toner.addTo(map);
 
 L.marker([28.6138954, 77.2090057]).addTo(map).bindPopup("Hii!").openPopup();
+
+searchBtn.onclick = GetLocation;
+
+async function GetLocation() {
+  const place = encodeURIComponent(searchInput.value);
+  const url = `https://nominatim.openstreetmap.org/search?format=json&q=${place}`;
+  const res = await fetch(url);
+  try {
+    if (res.ok) {
+      const locations = [];
+      const data = await res.json();
+      if (data.length === 0) {
+        throw Error("No location found");
+      }
+      data.forEach((p) => {
+        const loc = {
+          name: p.display_name,
+          lat: p.lat,
+          lon: p.lon,
+        };
+        locations.push(loc);
+      });
+      console.log(locations);
+    }
+  } catch (e) {
+    console.log(e);
+  }
+}
