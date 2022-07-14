@@ -1,5 +1,8 @@
+const loading = document.querySelector(".loading");
+const errorEl = document.querySelector(".error");
 const searchInput = document.querySelector(".search-input");
 const searchBtn = document.querySelector(".search-btn");
+const searchResults = document.querySelector(".search-results");
 const map = L.map("map").setView([28.6138954, 77.2090057], 4);
 
 const Stamen_Toner = L.tileLayer(
@@ -16,32 +19,39 @@ const Stamen_Toner = L.tileLayer(
 
 Stamen_Toner.addTo(map);
 
-L.marker([28.6138954, 77.2090057]).addTo(map).bindPopup("Hii!").openPopup();
-
-searchBtn.onclick = GetLocation;
+searchBtn.onclick = (e) => {
+  e.preventDefault();
+  GetLocation();
+};
 
 async function GetLocation() {
+  errorEl.style.display = "";
+  searchResults.innerHTML = "";
+  loading.style.display = "block";
   const place = encodeURIComponent(searchInput.value);
   const url = `https://nominatim.openstreetmap.org/search?format=json&q=${place}`;
   const res = await fetch(url);
   try {
     if (res.ok) {
-      const locations = [];
+      loading.style.display = "";
       const data = await res.json();
       if (data.length === 0) {
         throw Error("No location found");
       }
       data.forEach((p) => {
-        const loc = {
-          name: p.display_name,
-          lat: p.lat,
-          lon: p.lon,
-        };
-        locations.push(loc);
+        createSearchResult(p.display_name, p.lat, p.lon);
       });
-      console.log(locations);
     }
-  } catch (e) {
-    console.log(e);
+  } catch (err) {
+    errorEl.style.display = "block";
+    errorEl.textContent = err.message;
   }
+}
+
+function createSearchResult(display_name, lat, lon) {
+  const el = document.createElement("p");
+  el.setAttribute("data-lat", lat);
+  el.setAttribute("data-lon", lon);
+  el.textContent = display_name;
+  searchResults.appendChild(el);
 }

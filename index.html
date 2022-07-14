@@ -21,8 +21,11 @@
         name="place"
         placeholder="Name of place, e.g, London"
       />
-      <button class="search-btn" type="button">Search</button>
+      <button class="search-btn">Search</button>
     </form>
+    <p class="loading">Loading...</p>
+    <p class="error"></p>
+    <div class="search-results"></div>
     <div id="map"></div>
     <script type="module" src="leaflet/leaflet.js"></script>
     <script type="module" src="main.js"></script>

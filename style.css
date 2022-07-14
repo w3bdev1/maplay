@@ -2,3 +2,21 @@
   height: 35rem;
 }
 
+.error,
+.loading {
+  text-align: center;
+  display: none;
+}
+
+.error {
+  color: firebrick;
+}
+
+.search-results > * {
+  padding: 0.5rem;
+  cursor: pointer;
+}
+
+.search-results > *:hover {
+  background-color: #ddd;
+}
