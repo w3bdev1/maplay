@@ -24,6 +24,14 @@ searchBtn.onclick = (e) => {
   GetLocation();
 };
 
+searchResults.addEventListener("click", (e) => {
+  const el = e.target;
+  const popup_name = el.textContent.split(",")[0];
+  const lat = el.getAttribute("data-lat");
+  const lon = el.getAttribute("data-lon");
+  setPopup(popup_name, lat, lon);
+});
+
 async function GetLocation() {
   errorEl.style.display = "";
   searchResults.innerHTML = "";
@@ -56,10 +64,12 @@ function createSearchResult(display_name, lat, lon) {
   searchResults.appendChild(el);
 }
 
-searchResults.addEventListener("click", (e) => {
-  const el = e.target;
-  const popup_name = el.textContent.split(",")[0];
-  const lat = el.getAttribute("data-lat");
-  const lon = el.getAttribute("data-lon");
+function setPopup(popup_name, lat, lon) {
   L.marker([lat, lon]).addTo(map).bindPopup(popup_name).openPopup();
-});
+  map.setView(L.latLng(lat, lon), 5, {
+    animate: true,
+    pan: {
+      duration: 0.5,
+    },
+  });
+}
