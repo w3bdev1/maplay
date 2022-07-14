@@ -55,3 +55,11 @@ function createSearchResult(display_name, lat, lon) {
   el.textContent = display_name;
   searchResults.appendChild(el);
 }
+
+searchResults.addEventListener("click", (e) => {
+  const el = e.target;
+  const popup_name = el.textContent.split(",")[0];
+  const lat = el.getAttribute("data-lat");
+  const lon = el.getAttribute("data-lon");
+  L.marker([lat, lon]).addTo(map).bindPopup(popup_name).openPopup();
+});
